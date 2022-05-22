@@ -38,6 +38,10 @@ def create_optimization_options():
 
 def create_other_optimization_options(my_opts):
     opts = read_optimizations()
-    for my_opt in my_opts:
-        opts.remove(my_opt)
+    if isinstance(my_opts, list):
+        for my_opt in my_opts:
+            opts.remove(my_opt)
+    else:
+        opts.remove(my_opts)
+
     return generate_possible_combinations(opts)

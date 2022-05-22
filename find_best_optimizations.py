@@ -11,7 +11,7 @@ def write_labels_to_csv(labels):
     csv_input.to_csv('graph_properties.csv', index=False)
 
 
-with open('run_times_o2_opts.csv', 'r', encoding='UTF8') as f:
+with open('run_times_cbench_o2_opts.csv', 'r', encoding='UTF8') as f:
     reader = csv.DictReader(f)
     dataset_names = []
     for row in reader:
@@ -21,7 +21,7 @@ with open('run_times_o2_opts.csv', 'r', encoding='UTF8') as f:
 
 o2_times = {k: 0.0 for k in dataset_names}
 
-with open('run_times_o2_opts.csv', 'r', encoding='UTF8') as f:
+with open('run_times_cbench_o2_opts.csv', 'r', encoding='UTF8') as f:
     reader = csv.DictReader(f)
     for row in reader:
         if o2_times[row['name']] == 0.0:
@@ -43,7 +43,7 @@ with open('run_times_part1.csv', 'r', encoding='UTF8') as f:
     # write the header
 '''
 
-with open('run_times_o2_opts.csv', 'r', encoding='UTF8') as f:
+with open('run_times_cbench_o2_opts.csv', 'r', encoding='UTF8') as f:
     reader = csv.DictReader(f)
     for row in reader:
         # if float(row[None][0]) <= correlation_o3_time:
@@ -125,11 +125,11 @@ for idx, data in enumerate(dataset_names):
         print("Min run time of " + data + " : " + str(min_runtime))
 
 '''
-write_labels_to_csv(labels)
+# write_labels_to_csv(labels)
 fs = 9  # fontsize
 
 pos = [0]
-fig, axs = plt.subplots(4,7, figsize=(15, 10), facecolor='w', edgecolor='k')
+fig, axs = plt.subplots(3,7, figsize=(15, 10), facecolor='w', edgecolor='k')
 fig.subplots_adjust(hspace = .5, wspace=.5)
 axs = axs.ravel()
 
@@ -150,4 +150,4 @@ fig.legend(handles, labels, loc='upper right')
 fig.suptitle("Different Optimization Run Times with O2 Baseline")
 fig.subplots_adjust(hspace=0.4)
 # plt.show()
-plt.savefig('plots/o2vsOpts.png', dpi=600)
+plt.savefig('plots/o2vsOpts_cbench.png', dpi=600)
