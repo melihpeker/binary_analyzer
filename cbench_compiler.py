@@ -9,9 +9,11 @@ from analyze_bin import analyze_bin, write_edges_to_csv, write_features_to_csv
 from compile_binary import compile_binary, compile_binary_generic
 
 
-main_path = "/Users/melihpeker/Documents/Master/dataset/cBench_V1.1"
-all_datasets = os.listdir("/Users/melihpeker/Documents/Master/dataset/cBench_V1.1")
+main_path = "/Users/melihpeker/Documents/Master/dataset/cBench_V1.1_test"
+all_datasets = os.listdir("/Users/melihpeker/Documents/Master/dataset/cBench_V1.1_test")
 
+with open("skipped.txt", 'w') as f:
+    f.write("Skipped:")
 
 def change_gcc_version():
     for dataset in all_datasets:
@@ -80,7 +82,7 @@ options = create_optimization_options()
 
 os.chdir("/Users/melihpeker/Documents/Master/")
 
-with open('run_times_cbench_o2_opts.csv', 'w', encoding='UTF8') as f:
+with open('run_times_cbench_o2_opts_TEST.csv', 'w', encoding='UTF8') as f:
     writer = csv.writer(f)
     # write the header
     header = ['name']
@@ -89,13 +91,13 @@ with open('run_times_cbench_o2_opts.csv', 'w', encoding='UTF8') as f:
     header.append('time')
     writer.writerow(header)
 
-with open('graph_edges_cbench.csv', 'w', encoding='UTF8') as f:
+with open('graph_edges_cbench_TEST.csv', 'w', encoding='UTF8') as f:
     writer = csv.writer(f)
     # write the header
     header = ['graph_id', 'src', 'dst']
     writer.writerow(header)
 
-with open('graph_features_cbench.csv', 'w', encoding='UTF8') as f:
+with open('graph_features_cbench_TEST.csv', 'w', encoding='UTF8') as f:
     writer = csv.writer(f)
     # write the header
     header = ['graph_id', 'node_id', 'arithmetic', 'arithmetic_FP', 'memory', 'memory_FP',
@@ -120,10 +122,10 @@ for dataset in all_datasets:
             output_file = os.path.join(main_path, dataset, "src", "a.out")
 
             graph_single = analyze_bin(output_file)
-            write_edges_to_csv(graph_single, graph_id, 'graph_edges_cbench.csv')
-            write_features_to_csv(graph_single, graph_id, 'graph_features_cbench.csv')
+            write_edges_to_csv(graph_single, graph_id, 'graph_edges_cbench_TEST.csv')
+            write_features_to_csv(graph_single, graph_id, 'graph_features_cbench_TEST.csv')
 
-            with open('run_times_cbench_o2_opts.csv', 'a', encoding='UTF8') as f:
+            with open('run_times_cbench_o2_opts_TEST.csv', 'a', encoding='UTF8') as f:
                 writer = csv.writer(f)
                 # write the header
                 writer.writerow(row)
@@ -131,6 +133,8 @@ for dataset in all_datasets:
             graph_id += 1
 
         except:
+            with open("skipped.txt", 'a') as f:
+                f.write(dataset + " " + option)
             print(dataset + " " + option + " SKIPPED!")
 
 

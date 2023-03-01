@@ -4,10 +4,10 @@ import os
 
 import csv
 import pickle
-from graph_writer import save_graph, read_graph
-from analyze_bin import analyze_bin, write_edges_to_csv, write_features_to_csv
-from compile_binary import compile_binary, compile_binary_generic
-from generate_opt_sequence import *
+from binary_analyzer.graph_writer import save_graph, read_graph
+from binary_analyzer.analyze_bin import analyze_bin, write_edges_to_csv, write_features_to_csv
+from binary_analyzer.compile_binary import compile_binary, compile_binary_generic
+from binary_analyzer.generate_opt_sequence import *
 
 
 opts = read_optimizations()

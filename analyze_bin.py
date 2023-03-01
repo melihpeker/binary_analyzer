@@ -319,7 +319,7 @@ def analyze_bin(name):
     # biggest_function = functions[index_max]
 
     # start_state = proj.factory.blank_state(addr=proj.entry)
-    # plot_cfg(cfg, name, asminst=True, remove_imports=True, remove_path_terminator=True)
+    plot_cfg(cfg, name, asminst=True, remove_imports=True, remove_path_terminator=True)
 
     return G_new
 
