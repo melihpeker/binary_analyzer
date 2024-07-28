@@ -1,3 +1,5 @@
 angr
 angr-utils
 anytree
+matplotlib
+pandas
