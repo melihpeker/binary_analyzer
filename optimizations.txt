@@ -1,0 +1,2 @@
+-funroll-loops
+-funsafe-math-optimizations
