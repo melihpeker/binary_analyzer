@@ -65,13 +65,13 @@ def create_graph_properties():
 
 
 def write_labels_to_csv(labels, opt):
-    csv_input = pd.read_csv('graph_properties_ALL.csv')
+    csv_input = pd.read_csv('graph_properties.csv')
     csv_input['label'] = labels
-    csv_input.to_csv('graph_properties_ALL' + opt + '.csv', index=False)
+    csv_input.to_csv('graph_properties' + opt + '.csv', index=False)
 
 
 def filter_edges(indexes, opt):
-    csv_input = pd.read_csv('graph_edges_ALL.csv')
+    csv_input = pd.read_csv('graph_edges.csv')
 
     opt_indexes = []
     for idx, label in enumerate(indexes):
@@ -82,11 +82,11 @@ def filter_edges(indexes, opt):
 
     for idx, old_id in enumerate(opt_indexes):
         csv_input.loc[csv_input.graph_id == old_id, 'graph_id'] = idx
-    csv_input.to_csv('graph_edges_ALL' + opt + '.csv', index=False)
+    csv_input.to_csv('graph_edges' + opt + '.csv', index=False)
 
 
 def filter_features(indexes, opt):
-    csv_input = pd.read_csv('graph_features_ALL.csv')
+    csv_input = pd.read_csv('graph_features.csv')
 
     opt_indexes = []
     for idx, label in enumerate(indexes):
@@ -97,11 +97,11 @@ def filter_features(indexes, opt):
 
     for idx, old_id in enumerate(opt_indexes):
         csv_input.loc[csv_input.graph_id == old_id, 'graph_id'] = idx
-    csv_input.to_csv('graph_features_ALL' + opt + '.csv', index=False)
+    csv_input.to_csv('graph_features' + opt + '.csv', index=False)
 
 
 def filter_properties(indexes, opt):
-    csv_input = pd.read_csv('graph_properties_ALL' + opt + '.csv')
+    csv_input = pd.read_csv('graph_properties' + opt + '.csv')
 
     opt_indexes = []
     for idx, label in enumerate(indexes):
@@ -112,13 +112,13 @@ def filter_properties(indexes, opt):
 
     for idx, old_id in enumerate(opt_indexes):
         csv_input.loc[csv_input.graph_id == old_id, 'graph_id'] = idx
-    csv_input.to_csv('graph_properties_ALL' + opt + '.csv', index=False)
+    csv_input.to_csv('graph_properties' + opt + '.csv', index=False)
 
 
 # create_graph_properties()
 # combine_sets()
 
-with open('run_times_o2_opts_ALL.csv', 'r', encoding='UTF8') as f:
+with open('run_times_o2_opts.csv', 'r', encoding='UTF8') as f:
     reader = csv.DictReader(f)
     dataset_names = []
     for row in reader:
@@ -129,7 +129,7 @@ with open('run_times_o2_opts_ALL.csv', 'r', encoding='UTF8') as f:
 
 o2_times = {k: 0.0 for k in dataset_names}
 
-with open('run_times_o2_opts_ALL.csv', 'r', encoding='UTF8') as f:
+with open('run_times_o2_opts.csv', 'r', encoding='UTF8') as f:
     reader = csv.DictReader(f)
     for row in reader:
         if o2_times[row['name']] == 0.0:
@@ -138,7 +138,7 @@ with open('run_times_o2_opts_ALL.csv', 'r', encoding='UTF8') as f:
 run_times = {k: [] for k in dataset_names}
 sequences = {k: [] for k in dataset_names}
 
-with open('run_times_o2_opts_ALL.csv', 'r', encoding='UTF8') as f:
+with open('run_times_o2_opts.csv', 'r', encoding='UTF8') as f:
     reader = csv.DictReader(f)
     for idx, row in enumerate(reader):
         # if float(row[None][0]) <= correlation_o3_time:
