@@ -3,7 +3,7 @@ import itertools
 
 def read_optimizations():
     opts = []
-    file1 = open('optimizations_huawei.txt', 'r')
+    file1 = open('optimizations.txt', 'r')
     lines = file1.readlines()
     for opt in lines:
         opts.append(opt.strip())
