@@ -4,10 +4,19 @@ import os
 
 import csv
 import pickle
-from binary_analyzer.graph_writer import save_graph, read_graph
-from binary_analyzer.analyze_bin import analyze_bin, write_edges_to_csv, write_features_to_csv
-from binary_analyzer.compile_binary import compile_binary, compile_binary_generic
-from binary_analyzer.generate_opt_sequence import *
+from graph_writer import save_graph, read_graph
+from analyze_bin import analyze_bin, write_edges_to_csv, write_features_to_csv
+from compile_binary import compile_binary, compile_binary_generic
+from generate_opt_sequence import *
+
+
+def find_c_files(root_dir):
+    c_files = []
+    for dirpath, _, filenames in os.walk(root_dir):
+        for file in filenames:
+            if file.endswith('.c'):
+                c_files.append(os.path.join(dirpath, file))
+    return c_files
 
 
 opts = read_optimizations()
@@ -60,68 +69,64 @@ with open('graph_properties.csv', 'w', encoding='UTF8') as f:
 
 
 graph_id = 0
-path = os.listdir("dataset/poly_custom/")
-print(path)
-path = 'codes'
-output_path = "bins/" + path
+path = "dataset/polybench-c-3.2"
+codes = find_c_files(path)
+
+output_path = "bins/" 
 if not os.path.exists(output_path):
     os.mkdir(output_path)
-elif not os.path.isdir(output_path):
-    os.mkdir(output_path)
+if not os.path.exists("graphs"):
+    os.mkdir("graphs")
 
-if not os.path.exists("graphs/" + path):
-    os.mkdir("graphs/" + path)
+for file in codes:
+    # get file name from path
+    file_name = file.split('/')[-1].split('.')[0]
+    # get path of the file
+    abs_path = file.split(file_name)[0]
+    for idx, combination in enumerate(options):
+        row = [file_name]
+        table_entry = generate_table_entry(opts, combination)
+        for entry in table_entry:
+            row.append(entry)
 
-abs_path = os.path.join("dataset/poly_custom/") + path
+        output_file = os.path.join(output_path, file_name + '_' + str(idx))
 
+        option = ' '.join(options[idx])
+        print(option)
 
-for file in os.listdir(abs_path):
-    if file.endswith(".c"):
-        file = file.split('.')[0]
-        for idx, combination in enumerate(options):
-            row = [file]
-            table_entry = generate_table_entry(opts, combination)
-            for entry in table_entry:
-                row.append(entry)
+        try:
+            mean_time = compile_binary(abs_path, file, output_file, option)
+            row.append(str(mean_time))
+        except:
+            row.append(str(-1))
 
-            output_file = os.path.join(output_path, file + '_' + str(idx))
+        try:
+            graph_single = analyze_bin(output_file)
+            write_edges_to_csv(graph_single, graph_id, 'graph_edges.csv')
+            write_features_to_csv(graph_single, graph_id, 'graph_features.csv')
 
-            option = ' '.join(options[idx])
-            print(option)
+            with open('run_times_o2_opts.csv', 'a', encoding='UTF8') as f:
+                writer = csv.writer(f)
+                # write the header
+                writer.writerow(row)
 
-            try:
-                mean_time = compile_binary(abs_path, os.path.join(abs_path, file + '.c'), output_file, option)
-                row.append(str(mean_time))
-            except:
-                row.append(str(-1))
+            with open('graph_properties.csv', 'a', encoding='UTF8') as f:
+                writer = csv.writer(f)
+                # write the header
+                row = [graph_id, 0, len(graph_single.nodes)]
+                writer.writerow(row)
 
-            try:
-                graph_single = analyze_bin(output_file)
-                write_edges_to_csv(graph_single, graph_id, 'graph_edges.csv')
-                write_features_to_csv(graph_single, graph_id, 'graph_features.csv')
+            with open('graph_id_name.csv', 'a', encoding='UTF8') as f:
+                writer = csv.writer(f)
+                # write the header
+                row = [str(graph_id), path]
+                writer.writerow(row)
 
-                with open('run_times_o2_opts.csv', 'a', encoding='UTF8') as f:
-                    writer = csv.writer(f)
-                    # write the header
-                    writer.writerow(row)
+            graph_id = graph_id + 1
 
-                with open('graph_properties.csv', 'a', encoding='UTF8') as f:
-                    writer = csv.writer(f)
-                    # write the header
-                    row = [graph_id, 0, len(graph_single.nodes)]
-                    writer.writerow(row)
-
-                with open('graph_id_name.csv', 'a', encoding='UTF8') as f:
-                    writer = csv.writer(f)
-                    # write the header
-                    row = [str(graph_id), path]
-                    writer.writerow(row)
-
-                graph_id = graph_id + 1
-
-                # save_graph(graph_single, os.path.join('graphs', file, file+str(idx)))
-            except:
-                print("graph couldn't saved")
+            # save_graph(graph_single, os.path.join('graphs', file, file+str(idx)))
+        except:
+            print("graph couldn't saved")
 
 
 print("O2 TIMES FINISHED")
